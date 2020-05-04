@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import axios from 'axios';
+import {API_BASE_URL} from '../../constants/apiConstants';
 
 function RegistrationForm(props) {
     const [state, setState] = useState({
@@ -14,12 +16,48 @@ function RegistrationForm(props) {
             [id] : value
         }))
     }
+    const redirectToHome = () => {
+        props.updateTitle('Home')
+        props.history.push('/home');
+    }
+    const redirectToLogin = () => {
+        props.updateTitle('Login')
+        props.history.push('/login'); 
+    }
     const handleSubmitClick = (e) => {
         e.preventDefault()
         if (state.password === state.confirmPassword) {
             sendDetailsToServer()
         } else {
             props.showError('Passwords do not match')
+        }
+    }
+    const sendDetailsToServer = () => {
+        if (state.email.length && state.username.length && state.password.length) {
+            props.showError(null)
+            const payload = {
+                "email": state.email,
+                "username": state.username,
+                "password": state.password,
+            }
+            axios.post(API_BASE_URL+'user', payload)
+                .then(function (response) {
+                    if(response.data.code === 200) {
+                        setState(prevState => ({
+                            ...prevState,
+                            'successMessage': "Registration success"
+                        }))
+                        redirectToHome()
+                    } else {
+                        props.showError("Some error ocurred")
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+
+        } else {
+            props.showError('Please enter valid username and password')
         }
     }
     return (
@@ -76,3 +114,5 @@ function RegistrationForm(props) {
         </div>
     )
 }
+
+export default RegistrationForm
