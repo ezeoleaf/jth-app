@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
 import axios from 'axios';
+import './RegistrationForm.css'
 import {API_BASE_URL} from '../../constants/apiConstants';
+import {withRouter} from "react-router-dom"
 
 function RegistrationForm(props) {
     const [state, setState] = useState({
         email: "",
         username: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        successMessage: null
     })
     const handleChange = (e) => {
         const {id, value} = e.target
@@ -15,22 +18,6 @@ function RegistrationForm(props) {
             ...prevState,
             [id] : value
         }))
-    }
-    const redirectToHome = () => {
-        props.updateTitle('Home')
-        props.history.push('/home');
-    }
-    const redirectToLogin = () => {
-        props.updateTitle('Login')
-        props.history.push('/login'); 
-    }
-    const handleSubmitClick = (e) => {
-        e.preventDefault()
-        if (state.password === state.confirmPassword) {
-            sendDetailsToServer()
-        } else {
-            props.showError('Passwords do not match')
-        }
     }
     const sendDetailsToServer = () => {
         if (state.email.length && state.username.length && state.password.length) {
@@ -48,6 +35,7 @@ function RegistrationForm(props) {
                             'successMessage': "Registration success"
                         }))
                         redirectToHome()
+                        props.showError(null)
                     } else {
                         props.showError("Some error ocurred")
                     }
@@ -58,6 +46,22 @@ function RegistrationForm(props) {
 
         } else {
             props.showError('Please enter valid username and password')
+        }
+    }
+    const redirectToHome = () => {
+        props.updateTitle('Home')
+        props.history.push('/home');
+    }
+    const redirectToLogin = () => {
+        props.updateTitle('Login')
+        props.history.push('/login'); 
+    }
+    const handleSubmitClick = (e) => {
+        e.preventDefault()
+        if (state.password === state.confirmPassword) {
+            sendDetailsToServer()
+        } else {
+            props.showError('Passwords do not match')
         }
     }
     return (
@@ -111,8 +115,15 @@ function RegistrationForm(props) {
                     onClick={handleSubmitClick}
                 >Register</button>
             </form>
+            <div className="alert alert-success mt-2" style={{display: state.successMessage ? 'block' : 'none'}} role="alert">
+                {state.successMessage}
+            </div>
+            <div className="mt-2">
+                <span>Already have an account?</span>
+                <span className="loginText" onClick={() => redirectToLogin()}>Login here</span>
+            </div>
         </div>
     )
 }
 
-export default RegistrationForm
+export default withRouter(RegistrationForm)
