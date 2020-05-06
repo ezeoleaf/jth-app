@@ -2,6 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 function Header(props) {
+    const redirectToLogin = (e) => {
+        props.history.push("/login")
+    }
     const capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
@@ -14,7 +17,7 @@ function Header(props) {
                     <span className="h3">JTH</span>
                 </div>
                 <div className="col-8 d-flex flex-row-reverse text-white">
-                    <div className="p-2">Login</div>
+                    <div className="p-2" onClick={() => redirectToLogin()}>Login</div>
                 </div>
             </div>
         </nav>
