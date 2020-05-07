@@ -16,8 +16,25 @@ class Newspaper extends React.Component {
         }
     }
 
-    componentDidMount() {
+    render() {
+        return (
+            <div>
+                {
+                this.state.newspapers &&
+                this.state.newspapers.map( item =>
+                    <div className="card my-4" key={item.id}>
+                        <div className="card-body">
+                            {item.name} - {item.country}
+                        </div>
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    componentDidMount = () => {
         this.getNewspapers()
+        console.log(this.state)
     }
 
     getNewspapers = () => {
@@ -30,12 +47,10 @@ class Newspaper extends React.Component {
         console.log("Bearer " + authToken)
 
         axios.get(API_BASE_URL + 'newspapers', { headers: { Authorization: token } } )
-            .then(function (response) {
+            .then(response => {
                 if(response.status === 200) {
-                    this.setState(prevState => ({
-                        ...prevState,
-                        newspapers : response.data.items
-                    }))
+                    console.log(response.data)
+                    this.setState({ newspapers: response.data.items })
                 }
             })
             .catch(function (error) {
@@ -43,14 +58,6 @@ class Newspaper extends React.Component {
             })
 
         console.log("Retrieve newspapers")
-    }
-
-    render() {
-        return (
-            <div className="card">
-                A
-            </div>
-        )
     }
 
 }

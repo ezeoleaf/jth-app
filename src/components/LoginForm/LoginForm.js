@@ -30,7 +30,6 @@ function LoginForm(props) {
 
         axios.post(API_BASE_URL+'user/login', data, myHeaders )
             .then(function(response) {
-                console.log(response)
                 if(response.status === 200) {
                     setState(prevState => ({
                         ...prevState,
