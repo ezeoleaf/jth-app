@@ -1,27 +1,37 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-function Header(props) {
-    const redirectToLogin = (e) => {
-        props.history.push("/login")
+class Header extends React.Component {
+    constructor(props) {
+        super(props)
     }
-    const capitalize = (s) => {
+
+    redirectToLogin = () => {
+        this.props.history.push("/login")
+    }
+    capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
     }
-    const title = capitalize(props.location.pathname.substring(1, props.location.pathname.length))
-    return (
-        <nav className="navbar navbar-dark bg-dark">
-            <div className="row col-12">
-                <div className="col-4 d-flex justify-content-left text-white">
-                    <span className="h3">JTH</span>
+
+    render() {
+        console.log(this.props)
+
+        return (
+            <nav className="navbar navbar-dark bg-dark">
+                <div className="row col-12">
+                    <div className="col-4 d-flex justify-content-left text-white">
+                        <span className="h3">JTH</span>
+                    </div>
+                    <div className="col-8 d-flex flex-row-reverse text-white">
+                        <div className="p-2" onClick={() => this.redirectToLogin()}>Login</div>
+                    <div className="p-2" onClick={() => this.redirectToLogin()}>Newspapers</div>
+                    </div>
                 </div>
-                <div className="col-8 d-flex flex-row-reverse text-white">
-                    <div className="p-2" onClick={() => redirectToLogin()}>Login</div>
-                </div>
-            </div>
-        </nav>
-    )
+            </nav>
+        )
+    }
 }
+
 
 export default withRouter(Header);
