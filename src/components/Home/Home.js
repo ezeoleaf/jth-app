@@ -1,7 +1,7 @@
 import React, {useState, Component} from 'react'
 import axios from 'axios'
 import {withRouter} from 'react-router-dom'
-import Newspaper from '../Newspaper/Newspaper'
+import NewspaperList from '../Newspaper/Newspaper'
 
 function Home(props) {
 
@@ -17,7 +17,7 @@ function Home(props) {
     return(
         <div className="row">
             <div className="mt-2">
-                <Newspaper />
+                <NewspaperList />
             </div>
         </div>
     )

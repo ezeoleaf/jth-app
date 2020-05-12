@@ -9,6 +9,9 @@ class Header extends React.Component {
     redirectToLogin = () => {
         this.props.history.push("/login")
     }
+    redirectToHome = () => {
+        this.props.history.push("/home")
+    }
     capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
@@ -25,7 +28,7 @@ class Header extends React.Component {
                     </div>
                     <div className="col-8 d-flex flex-row-reverse text-white">
                         <div className="p-2" onClick={() => this.redirectToLogin()}>Login</div>
-                    <div className="p-2" onClick={() => this.redirectToLogin()}>Newspapers</div>
+                    <div className="p-2" onClick={() => this.redirectToHome()}>Newspapers</div>
                     </div>
                 </div>
             </nav>

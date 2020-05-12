@@ -3,6 +3,7 @@ import axios from 'axios'
 // import './Newspaper.css'
 import {API_BASE_URL} from '../../constants/apiConstants'
 import {withRouter} from 'react-router-dom'
+import SectionList from '../Sections/SectionList'
 
 class Newspaper extends React.Component {
     constructor(props) {
@@ -12,17 +13,29 @@ class Newspaper extends React.Component {
             newspapers: [],
             selectedNewspaper: null,
             filteredNewspapers: [],
+            sections: [],
+            searchSections: false,
             search: ""
         }
     }
 
+    searchSections = (id) => {
+        this.setState({
+            searchSections: true,
+            selectedNewspaper: id,
+          })
+    }
+
     render() {
+        const renderSections = this.state.searchSections;
         return (
             <div>
-                {
+                { this.state.searchSections ?
+                <SectionList newspaperId={this.state.selectedNewspaper} />
+                :
                 this.state.newspapers &&
                 this.state.newspapers.map( item =>
-                    <div className="card my-4" key={item.id}>
+                    <div className="card my-4" onClick={() => this.searchSections(item.id)} key={item.id}>
                         <div className="card-body">
                             {item.name} - {item.country}
                         </div>
@@ -34,7 +47,6 @@ class Newspaper extends React.Component {
 
     componentDidMount = () => {
         this.getNewspapers()
-        console.log(this.state)
     }
 
     getNewspapers = () => {
