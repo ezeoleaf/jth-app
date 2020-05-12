@@ -7,7 +7,7 @@ import {withRouter} from 'react-router-dom'
 class SectionList extends React.Component {
     constructor(props) {
         super(props)
-        console.log(props)
+
         this.state = {
             selectedNewspaper: props.newspaperId,
             sections: [],
@@ -22,10 +22,9 @@ class SectionList extends React.Component {
     // }
 
     render() {
-        console.log(this.props)
         return (
             <div>
-                <br/><h3> Sections </h3><br/>
+                <br/><h3 onClick={this.props.reset}> Sections </h3><br/>
                 {
                 this.state.sections &&
                 this.state.sections.map( item =>

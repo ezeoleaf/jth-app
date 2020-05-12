@@ -17,6 +17,9 @@ class Newspaper extends React.Component {
             searchSections: false,
             search: ""
         }
+
+        this.resetSections = this.resetSections.bind(this);
+        this.searchSections = this.searchSections.bind(this);
     }
 
     searchSections = (id) => {
@@ -26,12 +29,19 @@ class Newspaper extends React.Component {
           })
     }
 
+    resetSections = () => {
+        this.setState({
+            searchSections: false,
+            selectedNewspaper: null
+        })
+    }
+
     render() {
         const renderSections = this.state.searchSections;
         return (
             <div>
                 { this.state.searchSections ?
-                <SectionList newspaperId={this.state.selectedNewspaper} />
+                <SectionList newspaperId={this.state.selectedNewspaper} reset={this.resetSections} />
                 :
                 this.state.newspapers &&
                 this.state.newspapers.map( item =>
