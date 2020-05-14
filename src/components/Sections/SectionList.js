@@ -3,6 +3,7 @@ import axios from 'axios'
 // import './Newspaper.css'
 import {API_BASE_URL} from '../../constants/apiConstants'
 import {withRouter} from 'react-router-dom'
+import NewsList from '../News/NewsList'
 
 class SectionList extends React.Component {
     constructor(props) {
@@ -11,27 +12,47 @@ class SectionList extends React.Component {
         this.state = {
             selectedNewspaper: props.newspaperId,
             sections: [],
+            selectedSection: null,
+            searchNews: false
         }
+
+        this.searchNews = this.searchNews.bind(this)
+        this.resetNews = this.resetNews.bind(this)
     }
 
-    // searchSections = (id) => {
-    //     this.setState({
-    //         searchSections: true,
-    //         selectedNewspaper: id,
-    //       })
-    // }
+    searchNews = (id) => {
+        this.setState(() => {
+            return {
+                searchNews: true,
+                selectedSection: id,
+            }
+          })
+    }
+
+    resetNews = () => {
+        this.setState(() => {
+            return {
+                searchNews: false,
+                selectedSection: null
+            }
+        })
+    }
 
     render() {
         return (
             <div>
                 <br/><h3 onClick={this.props.reset}> Sections </h3><br/>
-                {
+                { this.state.searchNews ?
+                <NewsList sectionId={this.state.selectedSection} reset={this.resetNews} />
+                :
                 this.state.sections &&
                 this.state.sections.map( item =>
-                    <div className="card my-2" key={item.id}>
-                        <div className="card-body py-2">
-                            {item.name}
+                    <div className="list-group-item list-group-item-action flex-column align-items-start" onClick={() => this.searchNews(item.id)} key={item.id}>
+                        <div className="d-flex w-100 justify-content-between">
+                        <h6 className="my-2">{item.name}&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+                        <small><a href="#" className="button">Follow</a></small>
                         </div>
+                        <p className="mb-1">{item.description}</p>
                     </div>
                 )}
             </div>
@@ -49,12 +70,10 @@ class SectionList extends React.Component {
         myHeaders.append("Content-Type", "application/json")
         myHeaders.append("Authorization", "bearer " + authToken)
         const token = 'Bearer '.concat(authToken);
-        console.log("Bearer " + authToken)
 
         axios.get(API_BASE_URL + 'newspapers/' + this.state.selectedNewspaper, { headers: { Authorization: token } } )
             .then(response => {
                 if(response.status === 200) {
-                    console.log(response.data)
                     this.setState({ sections: response.data.sections })
                 }
             })
