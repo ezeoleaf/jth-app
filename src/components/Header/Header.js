@@ -1,40 +1,100 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
+// import {withRouter} from 'react-router-dom'
 
-class Header extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
-    redirectToLogin = () => {
-        this.props.history.push("/login")
-    }
-    redirectToHome = () => {
-        this.props.history.push("/home")
-    }
-    capitalize = (s) => {
-        if (typeof s !== 'string') return ''
-        return s.charAt(0).toUpperCase() + s.slice(1)
-    }
+export default function Header(props) {
+  const classes = useStyles();
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
-    render() {
-        console.log(this.props)
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
 
-        return (
-            <nav className="navbar navbar-dark bg-dark">
-                <div className="row col-12">
-                    <div className="col-4 d-flex justify-content-left text-white">
-                        <span className="h3">JTH</span>
-                    </div>
-                    <div className="col-8 d-flex flex-row-reverse text-white">
-                        <div className="p-2" onClick={() => this.redirectToLogin()}>Login</div>
-                    <div className="p-2" onClick={() => this.redirectToHome()}>Newspapers</div>
-                    </div>
-                </div>
-            </nav>
-        )
-    }
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const logout = () => {
+
+  }
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
+          </IconButton> */}
+          <Typography variant="h6" className={classes.title}>
+            JTH
+          </Typography>
+          {props.auth && (
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={logout}>Log out</MenuItem>
+              </Menu>
+            </div>
+          )
+          }
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }
 
-
-export default withRouter(Header);
+// export default withRouter(Header);

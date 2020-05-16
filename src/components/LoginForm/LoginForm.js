@@ -1,117 +1,185 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import './LoginForm.css'
 import {API_BASE_URL} from '../../constants/apiConstants'
 import {withRouter} from 'react-router-dom'
 
-class LoginForm extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            username: "",
-            password: "",
-            successMessage: null,
-            isLoggedIn: false
-        }
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmitClick = this.handleSubmitClick.bind(this)
-    }
-
-    handleChange = (e) => {
-        const {id, value} = e.target
-        this.setState(prevState => ({
-            ...prevState,
-            [id]: value
-        }))
-    }
-
-    handleSubmitClick = (e) => {
-        e.preventDefault()
-
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var data = new FormData()
-        data.append('username', this.state.username)
-        data.append('password', this.state.password)
-
-        axios.post(API_BASE_URL+'user/login', data, myHeaders )
-            .then((response) => {
-
-                if(response.status === 200) {
-                    this.setState(prevState => ({
-                        ...prevState,
-                        'successMessage': 'Login successful',
-                    }))
-                    localStorage.setItem("token", response.data.token)
-                    this.redirectToHome()
-                    this.props.showError(null)
-                }
-                else if(response.status === 204) {
-                    this.props.showError('Username and password do not match')
-                } else {
-                    this.props.showError('Username does not exists')
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-    
-    redirectToHome = () => {
-        this.props.updateTitle('Home')
-        this.props.history.push('/home')
-    }
-    
-    redirectToRegister = () => {
-        this.props.history.push('/register')
-        this.props.updateTitle('Register')
-    }
-
-    render() {
-        return(
-            <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
-                <form>
-                    <div className="form-group text-left">
-                        <label htmlFor="inputUsername">Username</label>
-                        <input type="text"
-                               className="form-control"
-                               id="username"
-                               aria-describedby="usernameHelp"
-                               placeholder="Enter username"
-                               value={this.state.username}
-                               onChange={this.handleChange}
-                        />
-                        <small id="usernameHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div className="form-group text-left">
-                        <label htmlFor="inputPassword">Password</label>
-                        <input type="password"
-                               className="form-control"
-                               id="password"
-                               placeholder="Password"
-                               value={this.state.password}
-                               onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-check"></div>
-                    <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={this.handleSubmitClick}
-                    >Login</button>
-                </form>
-                <div className="alert alert-success mt-2" style={{display: this.state.successMessage ? 'block' : 'none' }} role="alert">
-                    {this.state.successMessage}
-                </div>
-                <div className="registerMessage">
-                    <span>Don't have an account? </span>
-                    <span className="loginText" onClick={() => this.redirectToRegister()}>Register</span>
-                </div>
-            </div>
-        )
-    }
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Just The Headlines
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
-export default withRouter(LoginForm)
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+function SignIn(props) {
+  const classes = useStyles();
+  const [state, setState] = useState({
+    username: "",
+    password: "",
+    successMessage: ""
+  });
+
+  const handleChange = (e) => {
+    const {id, value} = e.target
+    console.log(id, value)
+    setState(prevState => ({
+        ...prevState,
+        [id]: value
+    }))
+  }
+
+  const handleSubmitClick = (e) => {
+    e.preventDefault()
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var data = new FormData()
+    data.append('username', state.username)
+    data.append('password', state.password)
+
+    axios.post(API_BASE_URL+'user/login', data, myHeaders )
+      .then((response) => {
+
+          if(response.status === 200) {
+              setState(prevState => ({
+                  ...prevState,
+                  'successMessage': 'Login successful',
+              }))
+              localStorage.setItem("token", response.data.token)
+              redirectToHome()
+              // this.props.showError(null)
+          }
+          else if(response.status === 204) {
+            console.log(response)
+              // this.props.showError('Username and password do not match')
+          } else {
+            console.log(response)
+              // this.props.showError('Username does not exists')
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+      })
+  }
+
+  const redirectToHome = () => {
+    props.history.push('/home')
+  }
+
+  const redirectToRegister = () => {
+    props.history.push('/register')
+  }
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            value={state.username}
+            onChange={handleChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={state.password}
+            onChange={handleChange}
+          />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmitClick}
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="#" variant="body2" onClick={redirectToRegister}>
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </Container>
+  );
+}
+
+export default withRouter(SignIn)
