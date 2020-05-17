@@ -16,6 +16,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+// import { makeStyles } from '@material-ui/core/styles';
 
 function Copyright() {
   return (
@@ -28,6 +31,10 @@ function Copyright() {
       {'.'}
     </Typography>
   );
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 function SignIn(props) {
@@ -58,14 +71,25 @@ function SignIn(props) {
     successMessage: ""
   });
 
+  const [open, setOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState(false);
+
   const handleChange = (e) => {
     const {id, value} = e.target
-    console.log(id, value)
+
     setState(prevState => ({
         ...prevState,
         [id]: value
     }))
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleSubmitClick = (e) => {
     e.preventDefault()
@@ -89,8 +113,9 @@ function SignIn(props) {
               redirectToHome()
               // this.props.showError(null)
           }
-          else if(response.status === 204) {
-            console.log(response)
+          else if(response.status === 203) {
+            setOpen(true)
+            setErrorMessage("Please provide valid username and password")
               // this.props.showError('Username and password do not match')
           } else {
             console.log(response)
@@ -98,7 +123,8 @@ function SignIn(props) {
           }
       })
       .catch((error) => {
-          console.log(error)
+        setOpen(true);
+        console.log(error)
       })
   }
 
@@ -174,6 +200,9 @@ function SignIn(props) {
             </Grid>
           </Grid>
         </form>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="warning">{errorMessage}</Alert>
+        </Snackbar>
       </div>
       <Box mt={8}>
         <Copyright />
