@@ -12,7 +12,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-// import {withRouter} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header(props) {
+function Header(props) {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -45,7 +45,11 @@ export default function Header(props) {
   };
 
   const logout = () => {
+    props.history.push('/login')
+  }
 
+  const redirectToHome = () => {
+    props.history.push('/home')
   }
 
   return (
@@ -55,7 +59,7 @@ export default function Header(props) {
           {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton> */}
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} onClick={redirectToHome}>
             JTH
           </Typography>
           {props.auth && (
@@ -97,4 +101,4 @@ export default function Header(props) {
   );
 }
 
-// export default withRouter(Header);
+export default withRouter(Header);
