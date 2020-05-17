@@ -89,7 +89,7 @@ function RegisterForm(props) {
         data.append('password', state.password)
 
         axios.post(API_BASE_URL+'user', data, myHeaders)
-            .then(function (response) {
+            .then((response) => {
                 if(response.data.code === 200) {
                     setState(prevState => ({
                         ...prevState,
@@ -101,7 +101,7 @@ function RegisterForm(props) {
                     // props.showError("Some error ocurred")
                 }
             })
-            .catch(function (error) {
+            .catch((error) => {
                 console.log(error);
             })
 
