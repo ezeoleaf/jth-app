@@ -190,6 +190,11 @@ function SectionList(props) {
     <div className={classes.root}>
       { !state.selectedSection ?
       <List component="nav" aria-label="sections">
+        <ListItem button onClick={props.reset}>
+          <ListItemText style={{ textAlign: 'center' }} primary="Return" />
+          <ListItemSecondaryAction></ListItemSecondaryAction>
+        </ListItem>
+        <Divider />
         { state.sections.map( (item, ix) =>
           <ListItem button key={item.id} onClick={() => searchNews(item.id)} >
             <ListItemText style={{ textAlign: 'center' }} primary={item.name} secondary={item.description} />
@@ -206,8 +211,7 @@ function SectionList(props) {
         )}
       </List>
       :
-        "a"
-        // <SectionList newspaperId={state.selectedNewspaper} reset={resetSections} />
+        <NewsList sectionId={state.selectedSection} reset={resetSections} />
       }
       {/* <Divider />
       <List component="nav" aria-label="secondary mailbox folders">
