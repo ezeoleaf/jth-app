@@ -126,26 +126,33 @@ function SectionList(props) {
     }))
   }
 
-  const [checked, setChecked] = React.useState({
-    sectionsFollowed: []
-  });
-
   const handleToggle = (value) => () => {
-    const currentIndex = checked.sectionsFollowed.indexOf(value);
-    const newChecked = [...checked.sectionsFollowed];
+    let section = state.sections[value]
+    let subscribed = section.subscribed ? false : true
+    section.subscribed = subscribed
+    let endpoint = subscribed ? "subscribe" : "unsubscribe"
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    const authToken = localStorage.getItem("token")
+    const token = 'Bearer '.concat(authToken);
 
-    setChecked(newChecked);
+    var data = new FormData()
+    data.append('sectionID', section.id)
+
+    axios.post(API_BASE_URL+endpoint, data, { headers: { Authorization: token } })
+      .then((response) => {
+          if(response.status === 200) {
+            setState((prevState) => ({
+              ...prevState,  
+              sections: state.sections,
+            }))
+          } else {
+            console.log(response)
+          }
+      })
+      .catch((error) => {
+          console.log(error);
+      })
   };
-
-  const startChecked = (response) => {
-    
-  }
 
   const resetSections = () => {
     setState((prevState) => ({
@@ -157,21 +164,15 @@ function SectionList(props) {
 
   const getSections = () => {
     const authToken = localStorage.getItem("token")
-
-    var myHeaders = new Headers()
-    myHeaders.append("Content-Type", "application/json")
-    myHeaders.append("Authorization", "bearer " + authToken)
     const token = 'Bearer '.concat(authToken);
 
     axios.get(API_BASE_URL + 'newspapers/' + props.newspaperId, { headers: { Authorization: token } } )
       .then(response => {
           if(response.status === 200) {
-            console.log(response)
             setState((prevState) => ({
               ...prevState,
               sections: response.data.sections
             }))
-            startChecked(response)
           }
       })
       .catch((error) => {
@@ -189,15 +190,15 @@ function SectionList(props) {
     <div className={classes.root}>
       { !state.selectedSection ?
       <List component="nav" aria-label="sections">
-        { state.sections.map( item =>
+        { state.sections.map( (item, ix) =>
           <ListItem button key={item.id} onClick={() => searchNews(item.id)} >
             <ListItemText style={{ textAlign: 'center' }} primary={item.name} secondary={item.description} />
             <ListItemSecondaryAction>
             <Switch
               edge="end"
-              onChange={handleToggle(item.id)}
-              checked={checked.sectionsFollowed.indexOf(item.id) !== -1}
-              inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
+              onChange={handleToggle(ix)}
+              checked={item.subscribed}
+              inputProps={{ 'aria-labelledby': 'switch-list-label-follow' }}
             />
             </ListItemSecondaryAction>
           </ListItem>
