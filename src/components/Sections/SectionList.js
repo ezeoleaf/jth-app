@@ -27,7 +27,7 @@ function SectionList(props) {
 
   const [state, setState] = React.useState({
     selectedNewspaper: props.newspaperId,
-    sections: [],
+    sections: {},
     selectedSection: null,
     searchNews: false,
     filteredSections: [],
@@ -42,8 +42,8 @@ function SectionList(props) {
     }))
   }
 
-  const handleToggle = (value) => () => {
-    let section = state.sections[value]
+  const handleToggle = (value, sectionId) => () => {
+    let section = state.sections[state.selectedNewspaper][value]
     let subscribed = section.subscribed ? false : true
     section.subscribed = subscribed
     let endpoint = subscribed ? "subscribe" : "unsubscribe"
@@ -51,6 +51,8 @@ function SectionList(props) {
     const authToken = localStorage.getItem("token")
     const token = 'Bearer '.concat(authToken);
 
+    console.log(sectionId)
+    console.log(section.id)
     var data = new FormData()
     data.append('sectionID', section.id)
 
@@ -81,13 +83,14 @@ function SectionList(props) {
   const getSections = () => {
     const authToken = localStorage.getItem("token")
     const token = 'Bearer '.concat(authToken);
-
-    axios.get(API_BASE_URL + 'newspapers/' + props.newspaperId, { headers: { Authorization: token } } )
+    axios.get(API_BASE_URL + 'newspapers/' + state.selectedNewspaper, { headers: { Authorization: token } } )
       .then(response => {
           if(response.status === 200) {
+            let sections = state.sections
+            sections[state.selectedNewspaper] = response.data.sections
             setState((prevState) => ({
               ...prevState,
-              sections: response.data.sections
+              sections: sections
             }))
           }
       })
@@ -97,7 +100,7 @@ function SectionList(props) {
   }
 
   React.useEffect(() => {
-    if (state.sections.length == 0) {
+    if (!state.sections[state.selectedNewspaper]) {
       getSections()
     }
   }, []);
@@ -111,13 +114,14 @@ function SectionList(props) {
           <ListItemSecondaryAction></ListItemSecondaryAction>
         </ListItem>
         <Divider />
-        { state.sections.map( (item, ix) =>
+        { state.sections[state.selectedNewspaper] &&
+          state.sections[state.selectedNewspaper].map( (item, ix) =>
           <ListItem button key={ix} onClick={() => searchNews(item.id)} >
             <ListItemText style={{ textAlign: 'center' }} primary={item.name} secondary={item.description} />
             <ListItemSecondaryAction>
             <Switch
               edge="end"
-              onChange={handleToggle(ix)}
+              onChange={handleToggle(ix, item.id)}
               checked={item.subscribed}
               inputProps={{ 'aria-labelledby': 'switch-list-label-follow' }}
             />

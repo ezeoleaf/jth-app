@@ -12,6 +12,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import NewsInfo from './NewsInfo'
 
 const useStyles = makeStyles({
   root: {
@@ -27,7 +29,7 @@ const useStyles = makeStyles({
   },
   pos: {
     marginBottom: 12,
-  },
+	}
 });
 
 // const useStyles = makeStyles((theme) => ({
@@ -43,7 +45,27 @@ function HomeNews(props) {
 
   const [state, setState] = React.useState({
     news: [],
-  })
+	})
+	
+	const shuffle = (array) => {
+    let counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+	}
 
   const getNews = () => {
     const authToken = localStorage.getItem("token")
@@ -54,7 +76,7 @@ function HomeNews(props) {
           if(response.status === 200) {
             setState((prevState) => ({
               ...prevState,
-              news: response.data
+              news: shuffle(response.data)
             }))
           }
       })
@@ -70,29 +92,37 @@ function HomeNews(props) {
   }, []);
 
   return (
-    <div >
+    <div style={{ padding: 10 }}>
 			{ state.news ?
-				state.news.map( (item, ix) =>
-					<Card className={classes.root} variant="outlined" key={ix}>
-						<CardContent>
-							<Typography className={classes.title} color="textSecondary" gutterBottom>
-									{item.newspaper} - {item.section}
-							</Typography>
-							<Typography variant="h5" component="h2">
-									{item.title}
-							</Typography>
-							<Typography variant="body2" component="p">
-									{item.description}
-							</Typography>
-						</CardContent>
-						<CardActions>
-							<Button size="small">Read more</Button>
-						</CardActions>
-					</Card>
+				<div>
+					<NewsInfo />
+					<Grid container spacing={3}>
+					{ state.news.map( (item, ix) =>
+						<Grid item xs={6} sm={3}  key={ix}>
+							<Card className={classes.root} variant="outlined">
+								<CardContent>
+									<Typography className={classes.title} color="textSecondary" gutterBottom>
+										{item.newspaper} - {item.section}
+									</Typography>
+									<Typography variant="h5" component="h2">
+										{item.title}
+									</Typography>
+									<Typography variant="body2" component="p">
+										{item.description}
+									</Typography>
+								</CardContent>
+								<CardActions>
+									<Button size="small">Read more</Button>
+								</CardActions>
+							</Card>
+						</Grid>
 					)
+					}
+					</Grid>
+				</div>
 					:
-					"HOLA"
-			}
+					"a"
+				}
     </div>
     // <div className={classes.root}>
         
