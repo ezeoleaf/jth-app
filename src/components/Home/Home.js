@@ -17,7 +17,7 @@ function Home(props) {
     return(
         <div className="row">
             <div className="mt-2">
-                <NewspaperList />
+                Home
             </div>
         </div>
     )

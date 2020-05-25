@@ -22,6 +22,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import purple from '@material-ui/core/colors/purple';
 import green from '@material-ui/core/colors/green';
+import Newspaper from './components/Newspaper/Newspaper'
 
 const useStyles = makeStyles((theme) => (
   console.log(theme),
@@ -60,8 +61,11 @@ function App(props) {
             <Route path="/" exact={true}>
                 <Home />
             </Route>
-            <Route path="/home" exact={true}>
+            <Route path="/home">
                 <Home />
+            </Route>
+            <Route path="/newspapers">
+                <Newspaper />
             </Route>
             <Route path="/login">
               <LoginForm />

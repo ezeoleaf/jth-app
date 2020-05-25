@@ -52,6 +52,10 @@ function Header(props) {
     props.history.push('/home')
   }
 
+  const redirectToNewspapers = () => {
+    props.history.push('/newspapers')
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -64,6 +68,7 @@ function Header(props) {
           </Typography>
           {props.auth && (
             <div>
+              <Button color="inherit" onClick={redirectToNewspapers}>Newspapers</Button>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"

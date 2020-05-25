@@ -173,30 +173,25 @@ function NewspaperList(props) {
   }, []);
 
   return (
-    <div className={classes.root}>
-      { !state.selectedNewspaper ?
-      <List component="nav" aria-label="main mailbox folders">
-        { state.newspapers.map( item =>
-          <ListItem button key={item.id} onClick={() => searchSections(item.id)} >
-            <ListItemText style={{ textAlign: 'center' }} primary={item.name} secondary={item.country} />
-          </ListItem>
-          
-        )}
-      </List>
-      :
-        <SectionList newspaperId={state.selectedNewspaper} reset={resetNewspapers} />
-      }
-      {/* <Divider />
-      <List component="nav" aria-label="secondary mailbox folders">
-        <ListItem button>
-          <ListItemText primary="Trash" />
-        </ListItem>
-        <ListItemLink href="#simple-list">
-          <ListItemText primary="Spam" />
-        </ListItemLink>
-      </List> */}
+    <div className="row">
+      <div className="mt-2">        
+        <div className={classes.root}>
+          { !state.selectedNewspaper ?
+          <List component="nav" aria-label="main mailbox folders">
+            { state.newspapers.map( item =>
+              <ListItem button key={item.id} onClick={() => searchSections(item.id)} >
+                <ListItemText style={{ textAlign: 'center' }} primary={item.name} secondary={item.country} />
+              </ListItem>
+              
+            )}
+          </List>
+          :
+            <SectionList newspaperId={state.selectedNewspaper} reset={resetNewspapers} />
+          }
+        </div>
+      </div>
     </div>
   );
 }
 
-export default NewspaperList
+export default withRouter(NewspaperList)
