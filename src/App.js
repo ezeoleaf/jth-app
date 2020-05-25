@@ -53,7 +53,7 @@ function App(props) {
   }
 
   return (
-    <Router>
+    <Router forceRefresh={true}>
       <div className={classes.root}>
         <Header auth={authToken} />
         { authToken ?
@@ -75,56 +75,21 @@ function App(props) {
             </Route>
           </Switch>
         :
-          // <Redirect to="/login" />
-          <LoginForm />
+          <Switch>
+            <Route path="/" exact={true}>
+              <LoginForm />
+            </Route>
+            <Route path="/login">
+              <LoginForm />
+            </Route>
+            <Route path="/register">
+              <RegisterForm />
+            </Route>
+          </Switch>
         }
       </div>
-      </Router>
+    </Router>
   );
-  // return (
-  //   <React.Fragment>
-  //     <CssBaseline />
-  //     <Container fixed>
-  //       <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: '100vh' }} />
-  //     </Container>
-  //   </React.Fragment>
-  // );
-  // return (
-    
-  //   <Button variant="contained" color="secondary">
-  //     Hello Worldasfasfnals
-  //   </Button>
-  // );
 }
-
-
-// function App() {
-//   const [title, updateTitle] = useState(null)
-//   const [errorMessage, updateErrorMessage] = useState(null)
-//   return (
-//     <Router>
-//       <div className="App">
-//         <Header title={title} />
-//           <div className="container d-flex align-items-center flex-column">
-//             <Switch>
-//               <Route path="/" exact={true}>
-//                 <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle} />
-//               </Route>
-//               <Route path="/register">
-//                 <RegistrationForm showError={updateErrorMessage} updateTitle={updateTitle} />
-//               </Route>
-//               <Route path="/login">
-//                 <LoginForm showError={updateErrorMessage} updateTitle={updateTitle} />
-//               </Route>
-//               <Route path="/home">
-//                 <Home/>
-//               </Route>
-//             </Switch>
-//             <AlertComponent errorMessage={errorMessage} hideError={updateErrorMessage}/>
-//           </div>
-//       </div>
-//     </Router>
-//   );
-// }
 
 export default App;

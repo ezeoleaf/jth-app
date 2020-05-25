@@ -20,11 +20,11 @@ const outerTheme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeProvider theme={outerTheme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
+    <React.StrictMode>
+      <ThemeProvider theme={outerTheme}>
+        <App />
+      </ThemeProvider>
+    </React.StrictMode>,
   document.querySelector("#app")
 );
 
