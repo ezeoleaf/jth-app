@@ -153,11 +153,18 @@ function NewspaperList(props) {
             }
         })
         .catch((error) => {
-            console.log(error)
+          if (error.response.status === 401) {
+            localStorage.removeItem("token")
+            redirectToLogin()
+          }
         })
 
     console.log("Retrieve newspapers")
-}
+  }
+
+  const redirectToLogin = () => {
+    props.history.push('/login')
+  }
 
   React.useEffect(() => {
     if (state.newspapers.length == 0) {

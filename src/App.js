@@ -71,7 +71,8 @@ function App(props) {
             </Route>
           </Switch>
         :
-          <Redirect  to="/login" />
+          // <Redirect to="/login" />
+          <LoginForm />
         }
       </div>
       </Router>
